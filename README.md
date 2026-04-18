@@ -3,7 +3,7 @@ A ~~low quality, pish~~ *streamlined and non resource-intensive* music player wr
 
  **Features**
 
-* 0% AI, all slop is 100% human-made.
+* No AI, all slop is 100% human-made.
 * No UI at all
 * No rewinding
 * No picking a specific song
