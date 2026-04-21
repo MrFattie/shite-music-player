@@ -1,22 +1,26 @@
 # shite-music-player
-A ~~low quality, pish~~ *streamlined and non resource-intensive* music player written in Python. (Intended more for my own learning purposes than actual use.)
+A ~~low quality, pish~~ *streamlined and non resource-intensive* music player written in Python.
 
  **Features**
 
-* No AI, all slop is 100% human-made.
-* No UI at all
-* No rewinding
-* No picking a specific song
-* No useful features, really, at all
-* No explanations
+* Support for opening a specific file or an entire folder 
+* Random shuffling of tracks
+* ~~badly made~~ simple, intuitive UI
+* No AI slop^1
 
-'convenience'... none of that woke nonsense here. (This is literally 66 lines of code.)
 
+
+
+
+
+^1  All slop is 100% human made.
 **How it works**
 
-When ran, the program asks you for a directory, and scans it (and one layer of sub-folders, to allow for playlists) for audio files. It then shuffles them randomly until there is none left. Then it quits and you have to run it again. Peak design.
+When the 'Open File' option is selected, the program will ask for a single file and play it. I know, mind-blowing stuff. I'm totally not padding out this document so it seems more impressive.
 
-While the program has no GUI (or any UI), to skip a song you can press the right arrow while Python is selected. (Press the icon in the Start menu/Dock) Similarily, press SPACE to pause/unpause. There is no support at present for rewinding a song.
+When the 'Open Folder' option is picked, the program asks you for a directory, and scans it (and one layer of sub-folders, to allow for playlists) for audio files. It then shuffles them randomly until there is none left. Scanning of sub-folders can be turned off.
+
+To skip a song, you can press the right arrow while the window is selected. Similarily, press SPACE to pause/unpause. There is no support at present for rewinding a song.
 
 **Requirements**
 
@@ -32,7 +36,7 @@ Once pygame is installed, you can close the window and the script should run as 
 
 NB: .py files will by default open in IDLE (Python's code editor) rather than running immediately.
 
-You also need actual music files (.mp3 or .wav). There are many (100%, totally legal fr) sites you can obtain these from which I will not list as I don't want to get in trouble. Or you could buy them, I suppose?
+You also need actual music files (.mp3 or .wav). There are many (100%, totally legal fr) sites you can obtain these from which I will not list as I don't want to get in trouble.
 
 **Why not just use Spotify?**
 
@@ -41,3 +45,4 @@ You also need actual music files (.mp3 or .wav). There are many (100%, totally l
 * Random shuffle ([Spotify's shuffle mode is not truly random](https://www.slashgear.com/1546972/how-to-fix-spotify-shuffle-feature/))
 * Made by a random person (this is 100% a positive)
 * ~~In the event of nuclear war and the destruction of the Internet, you can still listen to music with this~~
+* Steven flowe
