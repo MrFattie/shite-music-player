@@ -4,6 +4,7 @@ from sys import exit
 from funcs import *
 
 
+
 def displayButton(text, font, textColour, topleft, width, height, colour):
     surf = pygame.Surface((width, height))
     rect = pygame.Rect(topleft[0], topleft[1], width, height)
@@ -11,6 +12,18 @@ def displayButton(text, font, textColour, topleft, width, height, colour):
     screen.blit(surf, topleft)
     screen.blit(font.render(text, False, textColour), (topleft[0] + 5, topleft[1]))
     return rect
+
+#workaround to allow access to assets when booting from terminal.
+def find(name, path):
+    for root, dirs, files in os.walk(path):
+        if name in files:
+            return root
+        
+path = find('˚¬µß∂ƒΩ√˙∆¬.py', os.getcwd())
+
+os.chdir(path)
+
+
 root = tk.Tk()
 root.withdraw()
 pygame.init()
