@@ -1,27 +1,27 @@
-import pygame, json
+import pygame, json, os
 import tkinter as tk
 from sys import exit
-from funcs import *
-
-
-
-def displayButton(text, font, textColour, topleft, width, height, colour):
-    surf = pygame.Surface((width, height))
-    rect = pygame.Rect(topleft[0], topleft[1], width, height)
-    surf.fill(colour)
-    screen.blit(surf, topleft)
-    screen.blit(font.render(text, False, textColour), (topleft[0] + 5, topleft[1]))
-    return rect
-
 #workaround to allow access to assets when booting from terminal.
 def find(name, path):
     for root, dirs, files in os.walk(path):
         if name in files:
             return root
         
-path = find('˚¬µß∂ƒΩ√˙∆¬.py', os.getcwd())
+path = find('funcs.py', os.getcwd())
 
 os.chdir(path)
+from funcs import *
+
+
+
+def displayButton(text, font, textColour, topleft, width, height, colour, offset):
+    surf = pygame.Surface((width, height))
+    rect = pygame.Rect(topleft[0], topleft[1], width, height)
+    surf.fill(colour)
+    screen.blit(surf, topleft)
+    screen.blit(font.render(text, False, textColour), (topleft[0] + 5 + offset, topleft[1]))
+    return rect
+
 
 
 root = tk.Tk()
@@ -37,11 +37,13 @@ no = pygame.transform.scale_by(no, 0.125)
 rect1 = pygame.Rect(0, 0, 0, 0)
 rect2 = pygame.Rect(0, 0, 0, 0)
 rect3 = pygame.Rect(210, 58, 30, 30)
+rect4 = pygame.Rect(0, 0, 0, 0)
 surf = pygame.Surface((34, 34))
 surf.fill('#aababd')
 pygame.display.set_caption('Shite Music Player')
 colour1 = '#1e2024'
 colour2 = '#1e2024'
+colour3 = '#1e2024'
 music = []
 musicLeft = []
 config = json.load(open('config.json', 'r'))
@@ -52,8 +54,16 @@ skipSong = False
 folderOpened = False
 highlight = False
 alreadyPlayed = False
+message = ''
+offset = 0
 
 while True:
+    if config["doShuffle"] == True:
+        message = 'Random'
+        offset = 0
+    else:
+        message = 'A-Z'
+        offset = 20
     #events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -102,13 +112,27 @@ while True:
                         json.dump(config, file)
         else:
             highlight = False
-
+        if rect4.collidepoint(pygame.mouse.get_pos()):
+            colour3 = '#41454d'
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if not config["doShuffle"]:
+                    config["doShuffle"] = True
+                    with open('config.json', 'w') as file:
+                        json.dump(config, file)
+                else:
+                    config["doShuffle"] = False
+                    with open('config.json', 'w') as file:
+                        json.dump(config, file)
+        else:
+            colour3 = '#1e2024'
 
 
     #display
     screen.fill('#929ba8')
-    rect1 = displayButton('Open Folder...', font, 'white', [50, 60], 150, 30, colour1)
-    rect2 = displayButton('Open File...', font, 'white', [50, 20], 120, 30, colour2)
+    rect1 = displayButton('Open Folder...', font, 'white', [50, 60], 150, 30, colour1, 0)
+    rect2 = displayButton('Open File...', font, 'white', [50, 20], 120, 30, colour2, 0)
+    rect4 = displayButton(message, font, 'white', [250, 120], 85, 30, colour3, offset)
+    screen.blit(font.render('Track order: ', False, 'black'), (100, 120))
     if config["doSubDirectories"] == True:
         screen.blit(yes, (210, 58))
         screen.blit(font.render('Include sub-folders', False, 'green'), (255, 62))
@@ -133,23 +157,26 @@ while True:
     #music
 
     if len(musicLeft) > 1:
-        screen.blit(fontSmall.render('Folder opened is \'' + file_path + '\'', False, 'black'), (80, 120))
-        screen.blit(fontSmall.render('Song currently playing is \'' + music[num].replace(file_path, '') + '\'', False, 'black'), (80, 150))
+        screen.blit(fontSmall.render('Folder opened is \'' + file_path + '\'', False, 'black'), (80, 160))
+        screen.blit(fontSmall.render('Song currently playing is \'' + music[num].replace(file_path, '') + '\'', False, 'black'), (80, 190))
         if not pygame.mixer.get_busy() or skipSong:
             skipSong = False
-            num = nextSong(music)
-            while music[num] not in musicLeft:
-                num = nextSong(music)
+            num = nextSong(music, musicLeft)
+            if config["doShuffle"]:
+                while music[num] not in musicLeft:
+                    num = nextSong(music,musicLeft)
                 
-            newNum = musicLeft.index(music[num])
-            musicLeft.pop(newNum)
+                newNum = musicLeft.index(music[num])
+                musicLeft.pop(newNum)
+            else:
+                musicLeft.pop(num)
     elif len(musicLeft) == 1:
         if folderOpened:
-            screen.blit(fontSmall.render('Folder opened is \'' + file_path + '\'', False, 'black'), (80, 120))
-            screen.blit(fontSmall.render('Song currently playing is \'' + musicLeft[0].replace(file_path, '') + '\'', False, 'black'), (80, 150))
+            screen.blit(fontSmall.render('Folder opened is \'' + file_path + '\'', False, 'black'), (80, 160))
+            screen.blit(fontSmall.render('Song currently playing is \'' + musicLeft[0].replace(file_path, '') + '\'', False, 'black'), (80, 190))
         else:
-            screen.blit(fontSmall.render('You have not opened a folder.', False, 'black'), (80, 120))
-            screen.blit(fontSmall.render('Song currently playing is:\n\'' + musicLeft[0] + '\'', False, 'black'), (50, 150))
+            screen.blit(fontSmall.render('You have not opened a folder.', False, 'black'), (80, 160))
+            screen.blit(fontSmall.render('Song currently playing is:\n\'' + musicLeft[0] + '\'', False, 'black'), (50, 190))
         if not pygame.mixer.get_busy() and not alreadyPlayed:
             pygame.mixer.Sound(musicLeft[0]).play()
             alreadyPlayed = True

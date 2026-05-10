@@ -27,6 +27,7 @@ while True:
         if rect1.collidepoint(pygame.mouse.get_pos()):
             colour1 = '#41454d'
             if event.type == pygame.MOUSEBUTTONDOWN:
+                pass
                 
         else:
             colour1 = '#1e2024'
